@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dialogflow-sendgrid
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: ushacom
+spec:
+  rules:
+  - host: inbox.dialogflow.cloud.ushakov.co
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dialogflow-sendgrid
+          servicePort: http
+  tls:
+  - hosts:
+    - inbox.dialogflow.cloud.ushakov.co
+    secretName: dialogflow-sendgrid-cert

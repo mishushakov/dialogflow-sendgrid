@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dialogflow-sendgrid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dialogflow-sendgrid
+  template:
+    metadata:
+      labels:
+        app: dialogflow-sendgrid
+    spec:
+      containers:
+      - name: dialogflow-sendgrid
+        image: docker.pkg.github.com/mishushakov/dialogflow-sendgrid/dialogflow-sendgrid

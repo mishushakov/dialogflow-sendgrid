@@ -1,0 +1,4 @@
+requests
+langdetect
+flask
+email_reply_parser
