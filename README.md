@@ -55,3 +55,7 @@ See [k8s](k8s) for examples
 | INBOX_PASSWORD       | Sendgrid API Key                  | -                        |
 | INBOX_HOST           | SMTP and IMAP server hostname     | smtp.sendgrid.net        |
 | GATEWAY              | Dialogflow Gateway Implementation | https://cloud.ushakov.co |
+
+### Testing
+
+Send a test mail to a agent in the following format: your-google-cloud-project-id@yourdomain
