@@ -84,8 +84,6 @@ def inbox():
                     if 'simpleResponse' in component:
                         message.attach(MIMEText(component['simpleResponse']['textToSpeech'], 'plain'))
 
-        message.attach(MIMEText('<br><br>Powered by <a href="https://dialogflow.cloud.ushakov.co">Dialogflow Gateway</a>', 'html'))
-
         # Connect to SMTP and send the E-Mail
         session = smtplib.SMTP(host, 587)
         session.ehlo()
