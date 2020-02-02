@@ -38,6 +38,8 @@ def inbox():
     parsed_email_lang = fallback_lang
     try:
         parsed_email_lang = detect(parsed_email_body)
+    except:
+        pass
 
     # Log E-Mail
     app.logger.info('Received new E-Mail')
