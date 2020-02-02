@@ -22,5 +22,7 @@ spec:
             value: apikey
           - name: INBOX_PASSWORD
             value: <your-user-password>
+          - name: FALLBACK_LANG
+            value: en
           - name: GATEWAY
             value: https://cloud.ushakov.co

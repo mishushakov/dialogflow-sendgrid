@@ -15,6 +15,7 @@ from email_reply_parser import EmailReplyParser
 # Retrieve environment variables
 username = os.environ['INBOX_USER']
 password = os.environ['INBOX_PASSWORD']
+fallback_lang = os.environ['FALLBACK_LANG']
 host = os.environ['INBOX_HOST']
 gateway = os.environ['GATEWAY']
 
@@ -34,6 +35,9 @@ def inbox():
             parsed_email_body += part.get_payload()
 
     parsed_email_body = EmailReplyParser.parse_reply(parsed_email_body)
+    parsed_email_lang = fallback_lang
+    try:
+        parsed_email_lang = detect(parsed_email_body)
 
     # Log E-Mail
     app.logger.info('Received new E-Mail')
@@ -50,7 +54,17 @@ def inbox():
         'queryInput': {
             'text': {
                 'text': parsed_email_body,
-                'languageCode': detect(parsed_email_body)
+                'languageCode': parsed_email_lang
+            }
+        },
+        'queryParams': {
+            'payload': {
+                'email': {
+                    'from': parsed_email_from,
+                    'to': parsed_email_to,
+                    'subject': parsed_email['Subject'],
+                    'body': parsed_email_body
+                }
             }
         }
     }
