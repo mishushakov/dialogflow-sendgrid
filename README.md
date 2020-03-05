@@ -56,6 +56,8 @@ See [k8s](k8s) for examples
 | INBOX_HOST           | SMTP and IMAP server hostname                                 | smtp.sendgrid.net            |
 | FALLBACK_LANG        | Fallback language if language detection fails                 | en                           |
 | ENDPOINT             | Dialogflow Gateway Endpoint. {} fills Google Cloud project id | https://{}.core.ushaflow.com |
+| DEBUG                | Debug mode                                                    | true                         |
+| PORT                 | Listen on port                                                | 5000                         |
 
 ### Testing
 

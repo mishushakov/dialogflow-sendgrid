@@ -18,6 +18,8 @@ password = os.environ['INBOX_PASSWORD']
 fallback_lang = os.environ['FALLBACK_LANG']
 host = os.environ['INBOX_HOST']
 endpoint = os.environ['ENDPOINT']
+debug = os.environ['DEBUG'] == 'true'
+port = int(os.environ['PORT'])
 
 app = Flask(__name__)
 
@@ -120,4 +122,4 @@ def inbox():
     return "OK", 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=port)
