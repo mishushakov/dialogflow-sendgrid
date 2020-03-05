@@ -13,10 +13,10 @@ from langdetect import detect
 from email_reply_parser import EmailReplyParser
 
 # Retrieve environment variables
-username = os.environ['INBOX_USER']
+host = os.environ['INBOX_HOST']
+user = os.environ['INBOX_USER']
 password = os.environ['INBOX_PASSWORD']
 fallback_lang = os.environ['FALLBACK_LANG']
-host = os.environ['INBOX_HOST']
 endpoint = os.environ['ENDPOINT']
 debug = os.environ['DEBUG'] == 'true'
 port = int(os.environ['PORT'])
@@ -107,7 +107,7 @@ def inbox():
         session.starttls()
         session.ehlo()
 
-        session.login(username, password)
+        session.login(user, password)
         session.sendmail(parsed_email['To'], parsed_email['From'], message.as_string())
         session.quit()
 
