@@ -49,13 +49,13 @@ See [k8s](k8s) for examples
 
 ### Configuration
 
-| Environment Variable | Description                                      | Value                    |
-|----------------------|--------------------------------------------------|--------------------------|
-| INBOX_USER           | Sendgrid user                                    | apikey                   |
-| INBOX_PASSWORD       | Sendgrid API Key                                 | -                        |
-| INBOX_HOST           | SMTP and IMAP server hostname                    | smtp.sendgrid.net        |
-| FALLBACK_LANG        | Fallback language if language detection fails    | en                       |
-| GATEWAY              | Dialogflow Gateway Implementation                | https://cloud.ushakov.co |
+| Environment Variable | Description                                                   | Value                        |
+|----------------------|---------------------------------------------------------------|------------------------------|
+| INBOX_USER           | Sendgrid user                                                 | apikey                       |
+| INBOX_PASSWORD       | Sendgrid API Key                                              | -                            |
+| INBOX_HOST           | SMTP and IMAP server hostname                                 | smtp.sendgrid.net            |
+| FALLBACK_LANG        | Fallback language if language detection fails                 | en                           |
+| ENDPOINT             | Dialogflow Gateway Endpoint. {} fills Google Cloud project id | https://{}.core.ushaflow.com |
 
 ### Testing
 

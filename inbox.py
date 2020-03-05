@@ -17,7 +17,7 @@ username = os.environ['INBOX_USER']
 password = os.environ['INBOX_PASSWORD']
 fallback_lang = os.environ['FALLBACK_LANG']
 host = os.environ['INBOX_HOST']
-gateway = os.environ['GATEWAY']
+endpoint = os.environ['ENDPOINT']
 
 app = Flask(__name__)
 
@@ -49,7 +49,7 @@ def inbox():
     app.logger.info('Text: ' + parsed_email_body)
     app.logger.info('Message ID: ' + parsed_email['Message-ID'])
 
-    # Build Dialogflow Gateway Request
+    # Build Request
     agent_id = parsed_email_to.split('@')[0]
     req = {
         'session': parsed_email_from,
@@ -72,9 +72,8 @@ def inbox():
     }
 
     # Make the request
-    baseurl = agent_id + '.gateway.dialogflow.cloud.ushakov.co'
-    agent = requests.get(gateway, headers={'Host': baseurl})
-    r = requests.post(gateway, headers={'Host': baseurl}, json=req)
+    agent = requests.get(endpoint.format(agent_id))
+    r = requests.post(endpoint.format(agent_id), json=req)
     if r.status_code == 200:
         # Make new E-Mail for the response
         message = MIMEMultipart()
@@ -114,8 +113,8 @@ def inbox():
         app.logger.info('E-Mail response sent to ' + parsed_email_from)
     else:
         # Log request error
-        app.logger.error('Dialogflow Gateway request failed')
-        app.logger.error('Status: ' + r.status_code)
+        app.logger.error('Request failed')
+        app.logger.error('Status: ' + str(r.status_code))
         app.logger.error('Error: ' + r.json())
 
     return "OK", 200
