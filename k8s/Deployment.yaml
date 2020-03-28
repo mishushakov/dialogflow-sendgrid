@@ -16,17 +16,4 @@ spec:
       - name: dialogflow-sendgrid
         image: docker.pkg.github.com/mishushakov/dialogflow-sendgrid/dialogflow-sendgrid
         env:
-          - name: INBOX_HOST
-            value: smtp.sendgrid.net
-          - name: INBOX_USER
-            value: apikey
-          - name: INBOX_PASSWORD
-            value: <your-user-password>
-          - name: FALLBACK_LANG
-            value: en
-          - name: ENDPOINT
-            value: https://{}.core.ushaflow.com
-          - name: DEBUG
-            value: true
-          - name: PORT
-            value: 5000
+          # see README

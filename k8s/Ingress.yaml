@@ -7,7 +7,7 @@ metadata:
     cert-manager.io/cluster-issuer: ushacom
 spec:
   rules:
-  - host: inbox.dialogflow.cloud.ushakov.co
+  - host: email.ushaflow.io
     http:
       paths:
       - path: /
@@ -16,5 +16,5 @@ spec:
           servicePort: http
   tls:
   - hosts:
-    - inbox.dialogflow.cloud.ushakov.co
+    - email.ushaflow.io
     secretName: dialogflow-sendgrid-cert
