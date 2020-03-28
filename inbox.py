@@ -21,17 +21,11 @@ password = os.environ.get('INBOX_PASSWORD')
 fallback_lang = os.environ.get('FALLBACK_LANG')
 catchall = os.environ.get('CATCHALL')
 endpoint = os.environ.get('ENDPOINT')
+endpoint_ssr = os.environ.get('ENDPOINT_SSR')
 debug = os.environ.get('DEBUG') == 'true'
 port = int(os.environ.get('PORT'))
 
 app = Flask(__name__)
-
-# Connect to SMTP
-session = smtplib.SMTP(host, 587)
-session.ehlo()
-session.starttls()
-session.ehlo()
-session.login(user, password)
 
 # Handle POST request from Webhook
 @app.route('/', methods=['POST'])
@@ -83,9 +77,16 @@ def inbox():
         }
     }
 
+    # Connect to the SMTP Server
+    session = smtplib.SMTP(host, 587)
+    session.ehlo()
+    session.starttls()
+    session.ehlo()
+    session.login(user, password)
+
     # Make the request
     agent = requests.get(endpoint.replace('*', agent_id))
-    r = requests.post(endpoint.replace('*', agent_id), json=req)
+    r = requests.post(endpoint_ssr.replace('*', agent_id), json=req)
     if r.status_code == 200:
         # Make new E-Mail for the response
         message = MIMEMultipart()
@@ -96,20 +97,7 @@ def inbox():
         message['To'] = parsed_email['From']
         message['Subject'] = parsed_email['Subject']
 
-        # Attach the components
-        result = r.json()['queryResult']
-        if 'fulfillmentMessages' in result:
-            for component in result['fulfillmentMessages']:
-                if 'text' in component:
-                    message.attach(MIMEText(component['text']['text'][0], 'plain'))
-                elif 'simpleResponses' in component:
-                    message.attach(MIMEText(component['simpleResponses']['simpleResponses'][0]['textToSpeech'], 'plain'))
-
-        if 'webhookPayload' in result:
-            if 'google' in result['webhookPayload']:
-                for component in result['webhookPayload']['google']['richResponse']['items']:
-                    if 'simpleResponse' in component:
-                        message.attach(MIMEText(component['simpleResponse']['textToSpeech'], 'plain'))
+        message.attach(MIMEText(r.text, 'html'))
 
         # Send the E-Mail
         session.sendmail(message['From'], message['To'], message.as_string())

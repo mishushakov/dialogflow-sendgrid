@@ -7,6 +7,7 @@ ENV INBOX_USER apikey
 ENV INBOX_HOST smtp.sendgrid.net
 ENV FALLBACK_LANG en
 ENV ENDPOINT https://*.core.ushaflow.io
+ENV ENDPOINT_SSR https://*.ssr.ushaflow.io
 ENV DEBUG false
 ENV PORT 5000
 
