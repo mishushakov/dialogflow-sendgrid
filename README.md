@@ -57,6 +57,7 @@ See [k8s](k8s) for examples
 | FALLBACK_LANG        | Fallback language if language detection fails                 | en                           |
 | CATCHALL             | Catch-all address                                             | -                            |
 | ENDPOINT             | Dialogflow Gateway Endpoint. `*` for wildcard                 | https://*.core.ushaflow.io   |
+| ENDPOINT_SSR         | Dialogflow Gateway SSR Endpoint. `*` for wildcard             | https://*.ssr.ushaflow.io    |
 | DEBUG                | Debug mode                                                    | true                         |
 | PORT                 | Listen on port                                                | 5000                         |
 

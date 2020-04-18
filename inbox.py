@@ -10,6 +10,7 @@ from email import message_from_string
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import parseaddr, make_msgid
+from hashlib import md5
 from langdetect import detect
 from email_reply_parser import EmailReplyParser
 
@@ -31,11 +32,11 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def inbox():
     # Parse E-Mail
-    raw_email = request.form.to_dict()['email']
-    parsed_email = message_from_string(raw_email)
+    parsed_email = message_from_string(request.form.to_dict()['email'])
     parsed_email_from = parseaddr(parsed_email['From'])[1]
     parsed_email_to = parseaddr(parsed_email['To'])[1]
     parsed_email_to_domain = parsed_email_to.split('@')[1]
+    parsed_email_session = md5(bytes(parsed_email.get('Subject', '').replace('Re: ', '') + parsed_email_from, encoding='utf8')).hexdigest()
     parsed_email_body = ''
     for part in parsed_email.walk():
         if part.get_content_type() == 'text/plain':
@@ -54,11 +55,12 @@ def inbox():
     app.logger.info('To: ' + parsed_email_to)
     app.logger.info('Text: ' + parsed_email_body)
     app.logger.info('Message ID: ' + parsed_email['Message-ID'])
+    app.logger.info('Session ID: ' + parsed_email_session)
 
     # Build Request
     agent_id = parsed_email_to.split('@')[0]
     req = {
-        'session': parsed_email_from,
+        'session': parsed_email_session,
         'queryInput': {
             'text': {
                 'text': parsed_email_body,
@@ -77,13 +79,6 @@ def inbox():
         }
     }
 
-    # Connect to the SMTP Server
-    session = smtplib.SMTP(host, 587)
-    session.ehlo()
-    session.starttls()
-    session.ehlo()
-    session.login(user, password)
-
     # Make the request
     agent = requests.get(endpoint.replace('*', agent_id))
     r = requests.post(endpoint_ssr.replace('*', agent_id), json=req)
@@ -93,13 +88,17 @@ def inbox():
         message['Message-ID'] = make_msgid()
         message['In-Reply-To'] = parsed_email['Message-ID']
         message['References'] = parsed_email['Message-ID']
-        message['From'] = (agent.json()['displayName'] + ' <' + parsed_email_to + '>') or parsed_email['To']
+        message['From'] = agent.json()['displayName'] + ' <' + parsed_email_to + '>' if agent.json().get('displayName') else parsed_email['To']
         message['To'] = parsed_email['From']
         message['Subject'] = parsed_email['Subject']
-
         message.attach(MIMEText(r.text, 'html'))
 
         # Send the E-Mail
+        session = smtplib.SMTP(host, 587)
+        session.ehlo()
+        session.starttls()
+        session.ehlo()
+        session.login(user, password)
         session.sendmail(message['From'], message['To'], message.as_string())
 
         # Log response status
@@ -117,6 +116,11 @@ def inbox():
         message.attach(MIMEText(parsed_email_body, 'plain'))
 
         # Send the E-Mail
+        session = smtplib.SMTP(host, 587)
+        session.ehlo()
+        session.starttls()
+        session.ehlo()
+        session.login(user, password)
         session.sendmail(message['From'], message['To'], message.as_string())
 
         # Log response status
